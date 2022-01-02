@@ -1,159 +1,91 @@
 # TOC Project 2020
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/dc7fa47fcd809b99d087/maintainability)](https://codeclimate.com/github/NCKU-CCS/TOC-Project-2020/maintainability)
+The third homework of Theory of Computation.
 
-[![Known Vulnerabilities](https://snyk.io/test/github/NCKU-CCS/TOC-Project-2020/badge.svg)](https://snyk.io/test/github/NCKU-CCS/TOC-Project-2020)
+A LINE bot written in python3 and now deployed on Heroku.
 
+## Bot information
 
-Template Code for TOC Project 2020
+Bot basic ID: @578aojha
 
-A Line bot based on a finite state machine
+![Line bot QR](https://qr-official.line.me/sid/L/578aojha.png)
 
-More details in the [Slides](https://hackmd.io/@TTW/ToC-2019-Project#) and [FAQ](https://hackmd.io/s/B1Xw7E8kN)
+Scan the code above and have a lot of fun!
 
-## Setup
+## Requirements
 
-### Prerequisite
-* Python 3.6
-* Pipenv
-* Facebook Page and App
-* HTTPS Server
+- `python3.6`
+- `graphviz`
+- `graphviz-dev`
 
-#### Install Dependency
+## Installation
+
 ```sh
-pip3 install pipenv
-
-pipenv --three
-
+pip install pipenv
+pipenv --python 3.6
 pipenv install
-
 pipenv shell
 ```
 
-* pygraphviz (For visualizing Finite State Machine)
-    * [Setup pygraphviz on Ubuntu](http://www.jianshu.com/p/a3da7ecc5303)
-	* [Note: macOS Install error](https://github.com/pygraphviz/pygraphviz/issues/100)
+## Execution
 
+Before execution, `.env` file has to be created. That is, you have to get a
+**Channel access token** and a **Channel secret** from LINE Developers. After
+getting the access token and the secret, you should paste them in your `.env`
+file. The format of `.env` file can refer to `.env.sample`.
 
-#### Secret Data
-You should generate a `.env` file to set Environment Variables refer to our `.env.sample`.
-`LINE_CHANNEL_SECRET` and `LINE_CHANNEL_ACCESS_TOKEN` **MUST** be set to proper values.
-Otherwise, you might not be able to run your code.
-
-#### Run Locally
-You can either setup https server or using `ngrok` as a proxy.
-
-#### a. Ngrok installation
-* [ macOS, Windows, Linux](https://ngrok.com/download)
-
-or you can use Homebrew (MAC)
-```sh
-brew cask install ngrok
-```
-
-**`ngrok` would be used in the following instruction**
+After setting up `.env`, you can run any of the following command:
 
 ```sh
-ngrok http 8000
+gunicorn app:app
+# or
+python app.py
 ```
 
-After that, `ngrok` would generate a https URL.
+## Simple Usage
 
-#### Run the sever
+1. Go to any station by typing the name of a station or its station code. For
+   instance, "台北車站" ,"BL12", and "R10" are all valid to travel to Taipei
+   Main Station
+2. Click any button if you are at a station or on the train
+3. The same message is replied if the bot gets the invalid text to the bot
 
-```sh
-python3 app.py
-```
+## Homework Requirements
 
-#### b. Servo
+### Finite State Machine
 
-Or You can use [servo](http://serveo.net/) to expose local servers to the internet.
+![FSM](./fsm.svg)
 
+The graph above is a finite state machine with 466 states and 1261 transitions,
+which is actually the route map of Taipei Metro.
 
-## Finite State Machine
-![fsm](./img/show-fsm.png)
+### Demonstration
 
-## Usage
-The initial state is set to `user`.
+Here is a screenshot of replies of the bot.
 
-Every time `user` state is triggered to `advance` to another state, it will `go_back` to `user` state after the bot replies corresponding message.
+![Replies](https://i.imgur.com/BFy67E2.jpg)
 
-* user
-	* Input: "go to state1"
-		* Reply: "I'm entering state1"
+## Roadmap
 
-	* Input: "go to state2"
-		* Reply: "I'm entering state2"
+- [ ] Add favicon
+- [ ] Segment files
+- [ ] Add multilingual versions
+- [ ] Rewrite root page
+- [ ] Add database
+- [ ] Enrich contents
+- [ ] Add broadcast audio
 
-## Deploy
-Setting to deploy webhooks on Heroku.
+## References
 
-### Heroku CLI installation
+### Homework References
 
-* [macOS, Windows](https://devcenter.heroku.com/articles/heroku-cli)
+- [Slides 2020](https://docs.google.com/presentation/d/1HSf3-m6_h9Uv2N_y9mgOG6fOho-bRhl0oInhHdC45ZU)
+- [Slides 2019](https://hackmd.io/@TTW/ToC-2019-Project)
+- [FAQ 2018](https://hackmd.io/s/B1Xw7E8kN)
+- [line/line-bot-sdk-python](https://github.com/line/line-bot-sdk-python)
+- [pytransitions/transitions](https://github.com/pytransitions/transitions)
+- [CrazyRyan0812/CrazyRyan-TOC](https://github.com/CrazyRyan0812/CrazyRyan-TOC)
 
-or you can use Homebrew (MAC)
-```sh
-brew tap heroku/brew && brew install heroku
-```
+### Content References
 
-or you can use Snap (Ubuntu 16+)
-```sh
-sudo snap install --classic heroku
-```
-
-### Connect to Heroku
-
-1. Register Heroku: https://signup.heroku.com
-
-2. Create Heroku project from website
-
-3. CLI Login
-
-	`heroku login`
-
-### Upload project to Heroku
-
-1. Add local project to Heroku project
-
-	heroku git:remote -a {HEROKU_APP_NAME}
-
-2. Upload project
-
-	```
-	git add .
-	git commit -m "Add code"
-	git push -f heroku master
-	```
-
-3. Set Environment - Line Messaging API Secret Keys
-
-	```
-	heroku config:set LINE_CHANNEL_SECRET=your_line_channel_secret
-	heroku config:set LINE_CHANNEL_ACCESS_TOKEN=your_line_channel_access_token
-	```
-
-4. Your Project is now running on Heroku!
-
-	url: `{HEROKU_APP_NAME}.herokuapp.com/callback`
-
-	debug command: `heroku logs --tail --app {HEROKU_APP_NAME}`
-
-5. If fail with `pygraphviz` install errors
-
-	run commands below can solve the problems
-	```
-	heroku buildpacks:set heroku/python
-	heroku buildpacks:add --index 1 heroku-community/apt
-	```
-
-	refference: https://hackmd.io/@ccw/B1Xw7E8kN?type=view#Q2-如何在-Heroku-使用-pygraphviz
-
-## Reference
-[Pipenv](https://medium.com/@chihsuan/pipenv-更簡單-更快速的-python-套件管理工具-135a47e504f4) ❤️ [@chihsuan](https://github.com/chihsuan)
-
-[TOC-Project-2019](https://github.com/winonecheng/TOC-Project-2019) ❤️ [@winonecheng](https://github.com/winonecheng)
-
-Flask Architecture ❤️ [@Sirius207](https://github.com/Sirius207)
-
-[Line line-bot-sdk-python](https://github.com/line/line-bot-sdk-python/tree/master/examples/flask-echo)
+- [Flex simulator](https://developers.line.biz/flex-simulator/)
