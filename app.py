@@ -3,7 +3,7 @@ import re
 import sys
 import random
 
-from flask import Flask, request, abort, send_file
+from flask import Flask, request, abort, send_file, redirect
 from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
@@ -571,6 +571,11 @@ def current_state_to_send_message(machine: TaipeiMRTMachine):
           }
       }
     )
+
+
+@app.route('/', methods=['GET'])
+def root():
+  return redirect('https://line.me/R/ti/p/%40578aojha', code=307)
 
 
 @app.route('/callback', methods=['POST'])
